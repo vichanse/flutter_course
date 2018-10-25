@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ProductCreatePage extends StatefulWidget {
+  final Function addProduct;
+
+  ProductCreatePage(this.addProduct);
   @override
   State<StatefulWidget> createState() {
     return _ProductCreatePageState();
@@ -8,36 +11,58 @@ class ProductCreatePage extends StatefulWidget {
 }
 
 class _ProductCreatePageState extends State<ProductCreatePage> {
-  String titleValue;
-  String descriptionValue;
-  double priceValue;
+  String _titleValue;
+  String _descriptionValue;
+  double _priceValue;
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      new TextField(
-        onChanged: (String value) {
-          setState(() {
-            titleValue = value;
-          });
-        },
-      ),
-      new TextField(
-        maxLines: 4,
-        onChanged: (String value) {
-          setState(() {
-            descriptionValue = value;
-          });
-        },
-      ),
-      new TextField(
-        keyboardType: TextInputType.number,
-        onChanged: (String value) {
-          setState(() {
-            priceValue = double.parse(value);
-          });
-        },
-      ),
-    ]);
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      child: ListView(children: <Widget>[
+        new TextField(
+          decoration: InputDecoration(labelText: 'Product Title'),
+          onChanged: (String value) {
+            setState(() {
+              _titleValue = value;
+            });
+          },
+        ),
+        new TextField(
+          decoration: InputDecoration(labelText: 'Description'),
+          maxLines: 4,
+          onChanged: (String value) {
+            setState(() {
+              _descriptionValue = value;
+            });
+          },
+        ),
+        new TextField(
+          decoration: InputDecoration(labelText: 'Price'),
+          keyboardType: TextInputType.number,
+          onChanged: (String value) {
+            setState(() {
+              _priceValue = double.parse(value);
+            });
+          },
+        ),
+        SizedBox(height: 10.0),
+        RaisedButton(
+          child: Text('Save'),
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
+          onPressed: () {
+            final Map<String, dynamic> product = {
+              'title': _titleValue,
+              'description': _descriptionValue,
+              'price': _priceValue,
+              'image': 'assets/food.jpg',
+            };
+            widget.addProduct(product);
+            Navigator.pushReplacementNamed(context, '/products');
+          },
+        )
+      ]),
+    );
   }
 }
